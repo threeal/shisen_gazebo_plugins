@@ -24,6 +24,7 @@
 #include <gazebo/plugins/CameraPlugin.hh>
 #include <rclcpp/rclcpp.hpp>
 #include <shisen_interfaces/msg/raw_image.hpp>
+#include <shisen_interfaces/msg/compressed_image.hpp>
 
 #include <map>
 #include <string>
@@ -48,6 +49,9 @@ private:
 
   rclcpp::Publisher<shisen_interfaces::msg::RawImage>::SharedPtr
     raw_image_publisher;
+
+  rclcpp::Publisher<shisen_interfaces::msg::CompressedImage>::SharedPtr
+    compressed_image_publisher;
 };
 
 }  // namespace shisen_sim

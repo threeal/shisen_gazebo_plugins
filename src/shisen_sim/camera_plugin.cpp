@@ -22,6 +22,8 @@
 
 #include <gazebo_ros/node.hpp>
 #include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+
 #include <string>
 
 namespace shisen_sim
@@ -41,6 +43,7 @@ void CameraPlugin::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sdf)
   // Initialize the node
   {
     node = gazebo_ros::Node::Get(sdf);
+
     RCLCPP_INFO_STREAM(
       node->get_logger(),
       "Node initialized with name " << node->get_name() << "!"
@@ -50,6 +53,7 @@ void CameraPlugin::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sdf)
   // Initialize the raw image publisher
   {
     using RawImage = shisen_interfaces::msg::RawImage;
+
     raw_image_publisher = node->create_publisher<RawImage>(
       std::string(node->get_name()) + "/raw_image", 10
     );
@@ -60,6 +64,21 @@ void CameraPlugin::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sdf)
         raw_image_publisher->get_topic_name() << "!"
     );
   }
+
+  // Initialize the compressed image publisher
+  {
+    using CompressedImage = shisen_interfaces::msg::CompressedImage;
+
+    compressed_image_publisher = node->create_publisher<CompressedImage>(
+      std::string(node->get_name()) + "/compressed_image", 10
+    );
+
+    RCLCPP_INFO_STREAM(
+      node->get_logger(),
+      "Compressed image publisher initialized on " <<
+        compressed_image_publisher->get_topic_name() << "!"
+    );
+  }
 }
 
 void CameraPlugin::OnNewFrame(
@@ -68,7 +87,7 @@ void CameraPlugin::OnNewFrame(
 {
   gazebo::CameraPlugin::OnNewFrame(image, width, height, depth, format);
 
-  // Publish raw image
+  // Publish images
   {
     shisen_interfaces::msg::RawImage message;
 
@@ -80,6 +99,19 @@ void CameraPlugin::OnNewFrame(
     message.data.assign(image, image + byte_size);
 
     raw_image_publisher->publish(message);
+
+    cv::Mat mat_image(
+      cv::Size(message.cols, message.rows),
+      message.type, message.data.data());
+
+    // Publish compressed image
+    {
+      shisen_interfaces::msg::CompressedImage message;
+
+      cv::imencode(".jpg", mat_image, message.data, {cv::IMWRITE_JPEG_QUALITY, 50});
+
+      compressed_image_publisher->publish(message);
+    }
   }
 }
 
