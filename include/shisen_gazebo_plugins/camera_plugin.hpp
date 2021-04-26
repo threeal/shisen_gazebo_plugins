@@ -18,18 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef SHISEN_SIM__CAMERA_PLUGIN_HPP_
-#define SHISEN_SIM__CAMERA_PLUGIN_HPP_
+#ifndef SHISEN_GAZEBO_PLUGINS__CAMERA_PLUGIN_HPP_
+#define SHISEN_GAZEBO_PLUGINS__CAMERA_PLUGIN_HPP_
 
 #include <gazebo/plugins/CameraPlugin.hh>
 #include <rclcpp/rclcpp.hpp>
 #include <shisen_interfaces/msg/raw_image.hpp>
 #include <shisen_interfaces/msg/compressed_image.hpp>
 
-#include <map>
 #include <string>
 
-namespace shisen_sim
+namespace shisen_gazebo_plugins
 {
 
 class CameraPlugin : public gazebo::CameraPlugin
@@ -54,6 +53,6 @@ private:
     compressed_image_publisher;
 };
 
-}  // namespace shisen_sim
+}  // namespace shisen_gazebo_plugins
 
-#endif  // SHISEN_SIM__CAMERA_PLUGIN_HPP_
+#endif  // SHISEN_GAZEBO_PLUGINS__CAMERA_PLUGIN_HPP_

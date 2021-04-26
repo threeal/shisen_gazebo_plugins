@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "shisen_sim/camera_plugin.hpp"
+#include "shisen_gazebo_plugins/camera_plugin.hpp"
 
 #include <gazebo_ros/node.hpp>
 #include <opencv2/core.hpp>
@@ -26,7 +26,7 @@
 
 #include <string>
 
-namespace shisen_sim
+namespace shisen_gazebo_plugins
 {
 
 const double PI = atan(1) * 4;
@@ -117,4 +117,4 @@ void CameraPlugin::OnNewFrame(
 
 GZ_REGISTER_SENSOR_PLUGIN(CameraPlugin)
 
-}  // namespace shisen_sim
+}  // namespace shisen_gazebo_plugins

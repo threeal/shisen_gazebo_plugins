@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(shisen_sim)
+project(shisen_gazebo_plugins)
 
 if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD 99)
@@ -23,28 +23,32 @@ find_package(shisen_interfaces REQUIRED)
 
 link_directories(${gazebo_dev_LIBRARY_DIRS})
 
-add_library(camera_plugin SHARED
-  "src/shisen_sim/camera_plugin.cpp")
+install(DIRECTORY "include" DESTINATION ".")
 
-target_include_directories(camera_plugin PUBLIC
+add_library(shisen_camera_plugin SHARED
+  "src/camera_plugin.cpp")
+
+target_include_directories(shisen_camera_plugin PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 
-ament_target_dependencies(camera_plugin
-  OpenCV
-  gazebo_dev
-  gazebo_ros
-  rclcpp
-  shisen_interfaces)
+ament_target_dependencies(shisen_camera_plugin
+  OpenCV gazebo_dev gazebo_ros rclcpp shisen_interfaces)
 
-target_link_libraries(camera_plugin CameraPlugin)
+target_link_libraries(shisen_camera_plugin CameraPlugin)
 
-install(TARGETS camera_plugin
-  DESTINATION "share/${PROJECT_NAME}/plugins/${PROJECT_NAME}")
+install(TARGETS shisen_camera_plugin
+  DESTINATION "share/${PROJECT_NAME}/plugins")
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+ament_export_dependencies(
+  OpenCV gazebo_dev gazebo_ros rclcpp shisen_interfaces)
+
+ament_export_include_directories("include")
+ament_export_libraries(${PROJECT_NAME})
 
 ament_package()
