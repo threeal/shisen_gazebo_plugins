@@ -1,11 +1,13 @@
 # Shisen Gazebo Plugins
 
-[![latest version](https://img.shields.io/github/v/release/threeal/shisen_sim.svg)](https://github.com/threeal/shisen_sim/releases/)
-[![license](https://img.shields.io/github/license/threeal/shisen_sim.svg)](./LICENSE)
-[![build and test status](https://github.com/threeal/shisen_sim/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/threeal/shisen_sim/actions)
+[![latest version](https://img.shields.io/github/v/release/threeal/shisen_gazebo_plugins)](https://github.com/threeal/shisen_gazebo_plugins/releases/)
+[![milestone](https://img.shields.io/github/milestones/progress/threeal/shisen_gazebo_plugins/1?label=milestone)](https://github.com/threeal/shisen_gazebo_plugins/milestone/1)
+[![license](https://img.shields.io/github/license/threeal/shisen_gazebo_plugins)](./LICENSE)
+[![test status](https://img.shields.io/github/workflow/status/threeal/shisen_gazebo_plugins/Build%20and%20Test?label=test)](https://github.com/threeal/shisen_gazebo_plugins/actions)
 
-This package provides [a Gazebo simulation](http://gazebosim.org/) version of [Shisen camera package](https://github.com/ichiro-its/shisen).
+
+This package provides a [Gazebo](http://gazebosim.org/) simulation's plugins implementation of [Shisen](https://github.com/ichiro-its/shisen) camera tools project.
 
 ## License
 
-This project is licensed under [the MIT License](./LICENSE).
+This project is maintained by [Alfi Maulana](https://github.com/threeal) and licensed under the [MIT License](./LICENSE).
