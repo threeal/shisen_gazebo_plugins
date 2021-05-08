@@ -18,18 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "shisen_gazebo_plugins/camera_plugin.hpp"
-
+#include <shisen_gazebo_plugins/camera_plugin.hpp>
 #include <gazebo_ros/node.hpp>
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
 
+#include <memory>
 #include <string>
 
 namespace shisen_gazebo_plugins
 {
-
-const double PI = atan(1) * 4;
 
 CameraPlugin::CameraPlugin()
 : gazebo::CameraPlugin()
@@ -46,38 +42,19 @@ void CameraPlugin::Load(gazebo::sensors::SensorPtr sensor, sdf::ElementPtr sdf)
 
     RCLCPP_INFO_STREAM(
       node->get_logger(),
-      "Node initialized with name " << node->get_name() << "!"
-    );
+      "Node initialized with name " << node->get_name() << "!");
   }
 
-  // Initialize the raw image publisher
+  // Initialize the mat provider
   {
-    using RawImage = shisen_interfaces::msg::RawImage;
-
-    raw_image_publisher = node->create_publisher<RawImage>(
-      std::string(node->get_name()) + "/raw_image", 10
-    );
+    shisen_opencv::MatProvider::Options options;
+    options.compression_quality = sdf->Get<int>("compression_quality", -1).first;
 
     RCLCPP_INFO_STREAM(
-      node->get_logger(),
-      "Raw image publisher initialized on " <<
-        raw_image_publisher->get_topic_name() << "!"
-    );
-  }
+      node->get_logger(), "\nUsing the following parameters:" <<
+        "\n- compression_quality\t: " << options.compression_quality);
 
-  // Initialize the compressed image publisher
-  {
-    using CompressedImage = shisen_interfaces::msg::CompressedImage;
-
-    compressed_image_publisher = node->create_publisher<CompressedImage>(
-      std::string(node->get_name()) + "/compressed_image", 10
-    );
-
-    RCLCPP_INFO_STREAM(
-      node->get_logger(),
-      "Compressed image publisher initialized on " <<
-        compressed_image_publisher->get_topic_name() << "!"
-    );
+    mat_provider = std::make_shared<shisen_opencv::MatProvider>(node, options);
   }
 }
 
@@ -87,31 +64,24 @@ void CameraPlugin::OnNewFrame(
 {
   gazebo::CameraPlugin::OnNewFrame(image, width, height, depth, format);
 
-  // Publish images
-  {
-    shisen_interfaces::msg::RawImage message;
+  // Determine the mat type from the depth size
+  auto type = CV_8UC1;
+  if (depth == 2) {
+    type = CV_8UC2;
+  } else if (depth == 3) {
+    type = CV_8UC3;
+  } else if (depth == 4) {
+    type = CV_8UC4;
+  }
 
-    message.type = CV_8UC3;
-    message.cols = width;
-    message.rows = height;
+  // Create a mat from the new frame data
+  cv::Mat mat(height, width, type);
 
-    auto byte_size = width * height * depth;
-    message.data.assign(image, image + byte_size);
+  // Copy the mat data from the new frame data
+  memcpy(mat.data, image, width * height * depth);
 
-    raw_image_publisher->publish(message);
-
-    cv::Mat mat_image(
-      cv::Size(message.cols, message.rows),
-      message.type, message.data.data());
-
-    // Publish compressed image
-    {
-      shisen_interfaces::msg::CompressedImage message;
-
-      cv::imencode(".jpg", mat_image, message.data, {cv::IMWRITE_JPEG_QUALITY, 50});
-
-      compressed_image_publisher->publish(message);
-    }
+  if (mat_provider) {
+    mat_provider->set_mat(mat);
   }
 }
 

@@ -15,4 +15,4 @@ jobs:
         with:
           ros2-distro: foxy
           apt-packages: ros-foxy-gazebo-ros libopencv-dev
-          external-repos: ichiro-its/shisen_interfaces#v0.1.0
+          external-repos: threeal/shisen threeal/shisen_opencv

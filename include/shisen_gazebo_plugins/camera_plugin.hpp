@@ -23,9 +23,9 @@
 
 #include <gazebo/plugins/CameraPlugin.hh>
 #include <rclcpp/rclcpp.hpp>
-#include <shisen_interfaces/msg/raw_image.hpp>
-#include <shisen_interfaces/msg/compressed_image.hpp>
+#include <shisen_opencv/shisen_opencv.hpp>
 
+#include <memory>
 #include <string>
 
 namespace shisen_gazebo_plugins
@@ -46,11 +46,7 @@ protected:
 private:
   rclcpp::Node::SharedPtr node;
 
-  rclcpp::Publisher<shisen_interfaces::msg::RawImage>::SharedPtr
-    raw_image_publisher;
-
-  rclcpp::Publisher<shisen_interfaces::msg::CompressedImage>::SharedPtr
-    compressed_image_publisher;
+  std::shared_ptr<shisen_opencv::MatProvider> mat_provider;
 };
 
 }  // namespace shisen_gazebo_plugins
