@@ -19,7 +19,7 @@ find_package(OpenCV REQUIRED)
 find_package(gazebo_dev REQUIRED)
 find_package(gazebo_ros REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(shisen_interfaces REQUIRED)
+find_package(shisen_opencv REQUIRED)
 
 link_directories(${gazebo_dev_LIBRARY_DIRS})
 
@@ -33,7 +33,7 @@ target_include_directories(shisen_camera_plugin PUBLIC
   $<INSTALL_INTERFACE:include>)
 
 ament_target_dependencies(shisen_camera_plugin
-  OpenCV gazebo_dev gazebo_ros rclcpp shisen_interfaces)
+  OpenCV gazebo_dev gazebo_ros rclcpp shisen_opencv)
 
 target_link_libraries(shisen_camera_plugin CameraPlugin)
 
@@ -46,7 +46,7 @@ if(BUILD_TESTING)
 endif()
 
 ament_export_dependencies(
-  OpenCV gazebo_dev gazebo_ros rclcpp shisen_interfaces)
+  OpenCV gazebo_dev gazebo_ros rclcpp shisen_opencv)
 
 ament_export_include_directories("include")
 ament_export_libraries(${PROJECT_NAME})
