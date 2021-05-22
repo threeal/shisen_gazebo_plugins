@@ -15,4 +15,4 @@ jobs:
         with:
           ros2-distro: foxy
           pre-install: sudo apt update && sudo apt install -y curl && curl -s http://repository.ichiro-its.org/debian/setup.bash | bash -s
-          apt-packages: libopencv-dev ros-foxy-gazebo-ros ros-foxy-gazebo-dev ros-foxy-shisen-opencv
+          apt-packages: libopencv-dev ros-foxy-gazebo-dev ros-foxy-gazebo-plugins ros-foxy-gazebo-ros ros-foxy-shisen-opencv

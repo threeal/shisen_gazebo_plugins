@@ -6,6 +6,8 @@ build
 log
 install
 
+CHANGELOG.rst
+
 debian
 obj-x86_64-linux-gnu
 
