@@ -8,6 +8,7 @@
   <license>MIT License</license>
   <buildtool_depend>ament_cmake</buildtool_depend>
   <depend>gazebo_dev</depend>
+  <depend>gazebo_plugins</depend>
   <depend>gazebo_ros</depend>
   <depend>rclcpp</depend>
   <depend>shisen_opencv</depend>
